@@ -1,0 +1,70 @@
+/* App.css */
+body {
+  margin: 0;
+  padding: 0;
+  background: #f6f9fc;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.container {
+  padding: 40px;
+  max-width: 900px;
+  margin: auto;
+}
+
+h1 {
+  color: #222;
+  margin-bottom: 20px;
+}
+
+.login-btn,
+.fetch-btn,
+.thread-btn {
+  padding: 10px 18px;
+  margin-top: 10px;
+  font-size: 16px;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.login-btn:hover,
+.fetch-btn:hover,
+.thread-btn:hover {
+  background-color: #1558b0;
+}
+
+.email-list {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 30px;
+}
+
+.email-item {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.summary-box {
+  margin-top: 20px;
+}
+
+.summary-section,
+.reply-section {
+  background: #f0f4ff;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.summary-section h3,
+.reply-section h3 {
+  margin: 0 0 10px 0;
+}
