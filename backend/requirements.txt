@@ -1,9 +1,6 @@
 flask
 flask-cors
 gunicorn
-transformers
-torch
-requests
 google-auth
 google-auth-oauthlib
-accelerate
+google-generativeai
