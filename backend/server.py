@@ -4,43 +4,53 @@ import os
 import google.generativeai as genai
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app)
 
-# Configure Gemini API
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+# Configure Gemini API key
+API_KEY = os.environ.get("GEMINI_API_KEY")
+genai.configure(api_key=API_KEY)
+
 model = genai.GenerativeModel("gemini-1.5-flash")
 
-@app.route("/")
-def home():
-    return "Backend running successfully!"
-
-@app.route('/summarize', methods=['POST'])
+@app.route("/summarize", methods=["POST"])
 def summarize():
-    data = request.get_json()
-    text = data.get('text', '')
-
-    prompt = f"Summarize this email in 3-4 sentences:\n\n{text}"
-
     try:
-        response = model.generate_content(prompt)
-        summary = response.text
-        return jsonify({"summary": summary})
+        data = request.get_json()
+        text = data.get("text", "")
+
+        prompt = f"Summarize this email:\n\n{text}"
+
+        response = model.generate_content(
+            prompt,
+            generation_config={"max_output_tokens": 400}
+        )
+
+        return jsonify({"summary": response.text})
+
     except Exception as e:
+        print("SUMMARY ERROR:", str(e))
         return jsonify({"summary": None, "error": str(e)}), 500
 
-@app.route('/reply', methods=['POST'])
+
+@app.route("/reply", methods=["POST"])
 def reply():
-    data = request.get_json()
-    text = data.get('text', '')
-
-    prompt = f"Write a polite, professional reply to this email:\n\n{text}"
-
     try:
-        response = model.generate_content(prompt)
-        reply_text = response.text
-        return jsonify({"reply": reply_text})
+        data = request.get_json()
+        text = data.get("text", "")
+
+        prompt = f"Write a polite reply to this email:\n\n{text}"
+
+        response = model.generate_content(
+            prompt,
+            generation_config={"max_output_tokens": 400}
+        )
+
+        return jsonify({"reply": response.text})
+
     except Exception as e:
+        print("REPLY ERROR:", str(e))
         return jsonify({"reply": None, "error": str(e)}), 500
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
