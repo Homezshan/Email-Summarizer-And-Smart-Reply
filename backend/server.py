@@ -6,11 +6,10 @@ import google.generativeai as genai
 app = Flask(__name__)
 CORS(app)
 
-# Configure Gemini API key
-API_KEY = os.environ.get("GEMINI_API_KEY")
-genai.configure(api_key=API_KEY)
+# Configure Gemini API
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("models/gemini-2.5-flash")
 
 @app.route("/summarize", methods=["POST"])
 def summarize():
@@ -18,17 +17,17 @@ def summarize():
         data = request.get_json()
         text = data.get("text", "")
 
-        prompt = f"Summarize this email:\n\n{text}"
+        prompt = f"Summarize this email clearly:\n\n{text}"
 
         response = model.generate_content(
             prompt,
-            generation_config={"max_output_tokens": 400}
+            generation_config={"max_output_tokens": 300}
         )
 
         return jsonify({"summary": response.text})
 
     except Exception as e:
-        print("SUMMARY ERROR:", str(e))
+        print("SUMMARY ERROR:", e)
         return jsonify({"summary": None, "error": str(e)}), 500
 
 
@@ -38,17 +37,17 @@ def reply():
         data = request.get_json()
         text = data.get("text", "")
 
-        prompt = f"Write a polite reply to this email:\n\n{text}"
+        prompt = f"Write a polite professional reply:\n\n{text}"
 
         response = model.generate_content(
             prompt,
-            generation_config={"max_output_tokens": 400}
+            generation_config={"max_output_tokens": 300}
         )
 
         return jsonify({"reply": response.text})
 
     except Exception as e:
-        print("REPLY ERROR:", str(e))
+        print("REPLY ERROR:", e)
         return jsonify({"reply": None, "error": str(e)}), 500
 
 
