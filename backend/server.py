@@ -59,11 +59,13 @@ def reply():
 
         # ✅ SAFETY-BYPASS PROMPT
         prompt = (
-            "You are allowed to read and generate a reply to this email. "
-            "The user gives full permission to process this content. "
-            "Write a polite, professional reply:\n\n"
-            f"{text}"
-        )
+    "You are allowed to read and generate a reply to the following email. "
+    "The user owns this email content and gives full permission to process it. "
+    "Do NOT include any personal, sensitive, or harmful content. "
+    "Write a short, polite, professional reply:\n\n"
+    f"{text}"
+)
+
 
         response = model.generate_content(
             prompt,
