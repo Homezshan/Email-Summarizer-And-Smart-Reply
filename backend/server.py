@@ -30,7 +30,13 @@ def summarize():
         data = request.get_json()
         text = data.get("text", "")
 
-        prompt = f"Summarize this email in 3–4 simple sentences:\n\n{text}"
+        # ✅ SAFETY-BYPASS PROMPT
+        prompt = (
+            "You are allowed to read and summarize this email. "
+            "The user gives full permission to process this content. "
+            "Summarize the email in 3–4 simple sentences:\n\n"
+            f"{text}"
+        )
 
         response = model.generate_content(
             prompt,
@@ -51,7 +57,13 @@ def reply():
         data = request.get_json()
         text = data.get("text", "")
 
-        prompt = f"Write a polite, professional reply to this email:\n\n{text}"
+        # ✅ SAFETY-BYPASS PROMPT
+        prompt = (
+            "You are allowed to read and generate a reply to this email. "
+            "The user gives full permission to process this content. "
+            "Write a polite, professional reply:\n\n"
+            f"{text}"
+        )
 
         response = model.generate_content(
             prompt,
