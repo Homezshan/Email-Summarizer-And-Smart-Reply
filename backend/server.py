@@ -12,6 +12,15 @@ genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 # Use correct model
 model = genai.GenerativeModel("models/gemini-2.5-flash")
 
+# Safety override settings (fixes “No text returned”)
+SAFETY_SETTINGS = {
+    "HARASSMENT": "BLOCK_NONE",
+    "HATE_SPEECH": "BLOCK_NONE",
+    "SEXUAL_CONTENT": "BLOCK_NONE",
+    "DANGEROUS": "BLOCK_NONE"
+}
+
+
 def extract_text(response):
     """Safely extract text from Gemini response."""
     try:
@@ -30,17 +39,17 @@ def summarize():
         data = request.get_json()
         text = data.get("text", "")
 
-        # ✅ SAFETY-BYPASS PROMPT
         prompt = (
             "You are allowed to read and summarize this email. "
             "The user gives full permission to process this content. "
-            "Summarize the email in 3–4 simple sentences:\n\n"
+            "Summarize the email in 3–4 simple, clear sentences.\n\n"
             f"{text}"
         )
 
         response = model.generate_content(
             prompt,
-            generation_config={"max_output_tokens": 300}
+            generation_config={"max_output_tokens": 300},
+            safety_settings=SAFETY_SETTINGS
         )
 
         summary = extract_text(response)
@@ -57,19 +66,18 @@ def reply():
         data = request.get_json()
         text = data.get("text", "")
 
-        # ✅ SAFETY-BYPASS PROMPT
         prompt = (
-    "You are allowed to read and generate a reply to the following email. "
-    "The user owns this email content and gives full permission to process it. "
-    "Do NOT include any personal, sensitive, or harmful content. "
-    "Write a short, polite, professional reply:\n\n"
-    f"{text}"
-)
-
+            "You are allowed to read and generate a reply to this email. "
+            "The user owns this email content and gives full permission to process it. "
+            "The reply must be safe, helpful, polite, and professional.\n\n"
+            f"Email:\n{text}\n\n"
+            "Write a short and professional reply:"
+        )
 
         response = model.generate_content(
             prompt,
-            generation_config={"max_output_tokens": 300}
+            generation_config={"max_output_tokens": 300},
+            safety_settings=SAFETY_SETTINGS
         )
 
         reply_text = extract_text(response)
