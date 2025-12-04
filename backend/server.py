@@ -6,7 +6,9 @@ import os
 app = Flask(__name__)
 CORS(app, origins="*")
 
-summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6", device=-1)
+summarizer = pipeline("summarization", model="google/flan-t5-small")
+
+
 
 @app.route('/summarize', methods=['POST'])
 def summarize():
